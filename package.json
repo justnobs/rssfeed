@@ -1,0 +1,23 @@
+{
+  "name": "rss-feed",
+  "version": "0.0.1",
+  "description": "Rss feed aggregation and viewer",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justnobs/rssfeed.git"
+  },
+  "author": "Norvert John Abella",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justnobs/rssfeed/issues"
+  },
+  "homepage": "https://github.com/justnobs/rssfeed#readme",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mysql": "^2.9.0"
+  }
+}
