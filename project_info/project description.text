@@ -1,0 +1,35 @@
+I have your probation project ready for you.
+It is essentially rss feed aggregator and viewer with a focus on using socket.io for realtime updates.
+You will be using nodejs for the backend and any framework(or none at all) for the frontend.
+
+The specs of the projects are as follows:
+
++ The main page(and only) contains a list of links that are fetched
+  from a predefined set of RSS links(Just use a few sample ones of your own initially for development).
+
++ There links are fetched periodically from the feeds and the links themselves have
+  the title of the article, a blurb and picture if applicable
+
++ The links are ordered chronologically and new links will be pushed into
+  the page via socket.io as they are fetched.
+
++ Visitors will be able to click like on each link which will allow it to move up one position
+  chronologically so it has a higher chance of being seen.
+
++ The visitors themselves are tracked via cookies and there is no need to do
+  user registration etc.(This is to prevent double likes etc)
+
++ As the position of an article changes because of somebody clicking like, that change
+  must propogate all other users on the page at that time via socket.io
+
++ The page displays the 100 most recent links with an option to scroll down to load more
+
+You can make the page look something like the following image using plain bootstrap.
+I am not very picky about how it looks, just as long as it is usable.
+
+https://s3-ap-southeast-1.amazonaws.com/uploads-ap.hipchat.com/20148/91822/LGFsh0BJPQSMC37/The-UX-Library.jpg
+
+Finally, the things that I will be looking for in this project are a focus on readable and
+testable code and adherence to best practices when it comes to project setup and development.
+
+Please push your work to a public git repo for me to track and give feedback.

@@ -1,0 +1,23 @@
+Repository of the app
+https://github.com/justnobs/rssfeed
+
+Install nodejs
+    https://nodejs.org/
+
+Install expressjs
+    http://expressjs.com/starter/installing.html
+
+MySQL Integration with express
+    http://expressjs.com/guide/database-integration.html#mysql
+
+
+##########################
+Existing Project for reference
+https://github.com/karl-casas777/node-rss-feed
+
+MEAN.io
+http://mean.io/#!/
+
+Express for starters
+http://expressjs.com/starter
+http://expressjs.com/starter/static-files.html
