@@ -1,13 +1,20 @@
-var express = require('express');
+var http = require('http'),
+    fs = require('fs'),
+    express = require('express'),
+    config = JSON.parse(fs.readFileSync('config.json')),
+    host = config.host,
+    port = config.port;
+
 var app = express();
+var server = http.createServer(app);
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+app.use(app.router);
+app.use(express.static(__dirname + '/public'));
+
+// load the index page
+app.get('/', function(request, response){
+    console.log(response);
+    response.send('HELLO STATIC');
 });
 
-var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-
-  console.log('Example app listening at http://%s:%s', host, port);
-});
+app.listen(port, host);
