@@ -1,0 +1,53 @@
+.rss-title {
+    padding: 5px;
+    border: 2px solid #C75467;
+}
+
+.load-more {
+  padding: 5px 10px 5px 10px;
+  border: 2px solid #86CCE3;
+}
+
+#page-footer {
+  padding: 15px;
+  background: #D6D4D4;
+}
+
+.container{
+    margin: 10px;
+}
+
+.container div{
+  margin-top: 10px;
+}
+
+.link:hover{
+  text-decoration: none;
+}
+
+.content-data{
+  margin-top: 5px;
+  padding:5px;
+  border-left: 3px solid #8F2E4E;
+}
+
+.scrollTop{
+  width:50px;
+  height:50px;
+  border-radius:50px;
+  color:#fff;
+  background: #000;
+  text-align:center;
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+}
+
+.scrollTop span{
+  margin-top: 10px;
+}
+
+.scrollTop:hover{
+  background: #88D8F2;
+  cursor: pointer;
+}

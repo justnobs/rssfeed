@@ -1,6 +1,6 @@
 var mongo = require('mongodb');
 var host = "127.0.0.1";
-var port = mongo.Connection.DEFAULT_PORT;
+var port = "27017";
 var db = new mongo.DB('rss-feed', new mongo.Server(host, port, {}));
 
 db.open(function(error) {

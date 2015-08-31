@@ -1,32 +1,62 @@
-var mongo = require('mongodb');
-var host = "127.0.0.1";
-var port = mongo.Connection.DEFAULT_PORT;
-var db = new mongo.DB('rss-feed', new mongo.Server(host, port, {}));
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'rssfeed',
+  password : 'rssfeed',
+  database : 'rss_feed'
+});
+
+connection.connect(function(err){
+ if(!err) {
+     console.log("Database is connected ... \n\n");
+ } else {
+     console.log("Error connecting database ... \n\n");
+ }
+ });
 
 function getUser(id, callback){
-    db.open(function(error) {
-        console.log("We are connected! " + host + ":" + port);
-        db.collection("user", function(error, collection){
-            console.log("New collection added");
-            collection.find({'id': id.toString()}, function(error, cursor){
-                cursor.toArray(function(error, users){
-                      if (users.length !== 0) {
-                          //console.log('No user found');
-                          callback(false);
-                      } else {
-                          //console.log('Found a user ' + user[0]);
-                          callback(users[0]);
-                      }
-                });
-            });
-        });
-    });
+  if (typeof id == 'string') {
+      callback(false);
+  }
+  connection.query('SELECT * from tbl_user where id = ' + id, function(err, rows, fields) {
+    if (!err) {
+      callback(rows);
+    } else {
+      callback(false); // return false if no rows retrieved
+    }
+  });
 }
 
-getUser(1, function(user){
-    if (!user) {
-        console.log('User not found');
+function getUsers(callback){
+  connection.query('SELECT * from tbl_user', function(err, rows, fields) {
+    if (!err) {
+      callback(rows);
     } else {
-        console.log('Found user : ' + user);
+      callback(false); // return false if no rows retrieved
+    }
+  });
+}
+
+getUsers(function(result){
+    if (!result) {
+        console.log('No Users retrieved');
+    } else {
+        console.log('Users Found');
+        result.forEach(function(user,key){
+             console.log(user);
+        });
     }
 });
+
+getUser(function(1, result){
+    if (!result) {
+        console.log('No User retrieved');
+    } else {
+        console.log('User Found');
+        result.forEach(function(user,key){
+             console.log(user);
+        });
+    }
+});
+
+connection.end();
