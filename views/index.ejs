@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/css/jquery-ui.min.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/css/jquery-ui.theme.min.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/css/style.css" media="screen" title="no title" charset="utf-8">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/bootstrap/css/font-awesome.min.css" media="screen" title="no title" charset="utf-8">
+
+    <script src="/js/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui.min.js" type="text/javascript"></script>
+  </head>
+  <body id="body">
+    <script src="../socket.io/socket.io.js"></script>
+    <header>
+        <div id="page-header">
+            <nav id="nav-primary" class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <ul class="nav nav-pills pull-left">
+                      <h3 class="rss-title"> <span class="fa fa-wifi"></span> RSS Feed Aggregator</h3>
+                      <small>rss feed aggregator and viewer with a focus on using socket.io for realtime updates.</small>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <content>
+      <div class="container">
+        <div class="search-feed col-md-offset-2 col-md-4">
+            <input type="text" name="searchfeed" class="form-control" placeholder="Search rss feed">
+        </div>
+        <div class="result-container col-md-offset-2 col-md-8 hidden">
+            <div class="alert alert-info">
+                <span class="numResults" id="numResults">104 Results</span>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2"><hr></div>
+
+        <div class="content" id="articles">
+
+        </div>
+
+        <div class="col-md-3 col-md-offset-4">
+            <button type="button" class="btn btn-info form-control"><span class="fa fa-refresh "></span> Load More</button>
+        </div>
+      </div>
+    </content>
+    <div class="scrollTop hidden" id="scrollTop">
+        <span class="fa fa-arrow-up fa-2x"></span>
+    </div>
+    <footer>
+        <div id="page-footer">
+            <div id="footer-copyright">
+                <div class="container">
+                        Copyright 2015 © RSS-Feed
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript">
+          var url = '<%= url %>';
+          var emit_data = {};
+          var socket = io.connect(url);
+          var qty = 0;
+          // Emit 'init' event
+          emit_data = {
+            init: true
+          };
+          socket.emit('init', emit_data);
+    </script>
+    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="js/frontend.js" type="text/javascript"></script>
+  </body>
+</html>

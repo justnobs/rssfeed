@@ -1,26 +1,30 @@
 {
-  "name": "rss-feed",
-  "version": "0.0.1",
-  "description": "Rss feed aggregation and viewer",
-  "main": "rss.js",
+  "name": "rss-feeds",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/justnobs/rssfeed.git"
-  },
-  "author": "Norvert John Abella",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/justnobs/rssfeed/issues"
-  },
-  "homepage": "https://github.com/justnobs/rssfeed#readme",
   "dependencies": {
-    "bootstrap": "^3.3.5",
-    "express": "^4.13.3",
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "ejs": "~2.3.3",
+    "express": "~4.13.1",
+    "morgan": "~1.6.1",
+    "serve-favicon": "~2.3.0",
+    "socket.io": "~1.3.6",
+    "bower": "~1.5.2",
+    "lodash": "~3.10.1",
+    "mongodb": "~2.0.42",
+    "mysql": "~2.9.0",
     "feed-read": "0.0.1",
-    "mysql": "^2.9.0",
-    "socket.io": "^1.3.6"
+    "async": "~1.4.2"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-bower-install": "~1.6.0",
+    "load-grunt-tasks": "~3.2.0"
   }
 }

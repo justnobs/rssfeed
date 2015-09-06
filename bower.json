@@ -1,0 +1,26 @@
+{
+  "name": "rss-feeds",
+  "version": "0.0.1",
+  "homepage": "https://github.com/online-lorno/rss-feeds",
+  "authors": [
+    "Leonard Laput <online.lorno@gmail.com>"
+  ],
+  "description": "NodeJS RSS-Feeds Test Project",
+  "main": "app.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5",
+    "lodash": "~3.10.1"
+  }
+}
