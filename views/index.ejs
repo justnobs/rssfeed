@@ -13,6 +13,7 @@
 
     <script src="/js/jquery.min.js" type="text/javascript"></script>
     <script src="/js/jquery-ui.min.js" type="text/javascript"></script>
+    <!-- <script type="text/javascript" src="https://l2.io/ip.js?var=userip"></script> -->
   </head>
   <body id="body">
     <script src="../socket.io/socket.io.js"></script>
@@ -30,22 +31,23 @@
     </header>
     <content>
       <div class="container">
-        <div class="search-feed col-md-offset-2 col-md-4">
+        <!-- <div class="search-feed col-md-offset-2 col-md-4">
             <input type="text" name="searchfeed" class="form-control" placeholder="Search rss feed">
-        </div>
+        </div> -->
         <div class="result-container col-md-offset-2 col-md-8 hidden">
             <div class="alert alert-info">
-                <span class="numResults" id="numResults">104 Results</span>
+                <span class="numResults" id="numResults"></span>
             </div>
         </div>
         <div class="col-md-8 col-md-offset-2"><hr></div>
 
-        <div class="content" id="articles">
-
-        </div>
+        <div class="content col-md-8 col-md-offset-2" id="articles"></div>
 
         <div class="col-md-3 col-md-offset-4">
-            <button type="button" class="btn btn-info form-control"><span class="fa fa-refresh "></span> Load More</button>
+            <button type="button" class="btn btn-info form-control" id="btnLoadMore">
+              <span class="fa fa-refresh" id="loadMoreIcon"></span>
+              <span id="btnLoadMoreLabel">Load More</span>
+            </button>
         </div>
       </div>
     </content>
@@ -66,11 +68,12 @@
           var emit_data = {};
           var socket = io.connect(url);
           var qty = 0;
+          
           // Emit 'init' event
-          emit_data = {
-            init: true
-          };
-          socket.emit('init', emit_data);
+      		emit_data = {
+      			init: true
+      		};
+      		socket.emit('init', emit_data);
     </script>
     <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 		<script src="js/frontend.js" type="text/javascript"></script>
