@@ -13,6 +13,8 @@ $(document).ready(function(){
       }
   });
 
+
+
   // add the scroll animation
   $(window).scroll(function() {
     if ($(window).scrollTop() > 2000) {
@@ -37,7 +39,9 @@ $(document).ready(function(){
           qty += data.length;
           $('.result-container').removeClass('hidden');
           $('.result-container').find('#numResults').text(qty + ' Results Found');
+
           data.forEach(function(article){
+
               var dataArticle = '<div class="data-row" id="'+ article.id +'">' +
                   '<div class="row">' +
                       '<div class="col-xs-1">' +
@@ -53,9 +57,9 @@ $(document).ready(function(){
               '</div>';
               $(dataArticle).hide().appendTo('#articles').show('normal');
           });
-          // disabled all the buttons that already liked by the user
-          cookieDisable();
           //$(dataArticle).hide().prependTo('#articles').show('normal');
+      // get the userLikes
+      getUserLikes(cookie);
 	});
 
   $(document).on('click', '#btn_like', function() {
@@ -151,9 +155,22 @@ $(document).ready(function(){
         });
  }
 
- function cookieDisable(){
-    console.log('TEST DISABLED');
- }
+function getUserLikes(cookie){
+  var data = JSON.stringify({cookie_id: cookie});
+  ajax('/getUserLikes', 'POST', data)
+    .done(function(result){
+        result.forEach(function(row){
+            var $btn = $('#articles').find('#'+row.article_id).find('#btn_like');
+                $btn.removeClass('btn-success');
+                $btn.addClass('btn-info');
+                $btn.attr('disabled', 'disabled');
+        });
+    })
+    .fail(function(){
+        console.log('Failed get user likes');
+    });
+}
+
 
 });
 

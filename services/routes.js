@@ -13,6 +13,21 @@ module.exports = function(app) {
 		});
 	});
 
+  router.post('/getUserLikes', function(req, res, next) {
+    var cookie_id = req.body.cookie_id,
+        data, query;
+
+        query = "SELECT article_id from tbl_article_has_likes WHERE cookie_id = '" + cookie_id + "'";
+        data = {
+          'sql': query
+        };
+
+        db.get(data, function(err, rows){
+              res.send(JSON.stringify(rows));
+        });
+
+	});
+
 	router.post('/checkLikes', function (req, res){
 		 var article_id = req.body.article_id,
 		 		  cookie_id = req.body.cookie_id,
