@@ -44,6 +44,7 @@ var setup = {
             database : 'rssfeedmaster',
             debug    :  false
         });
+
         return true;
       }
 
@@ -100,7 +101,7 @@ function save(data, callback){
       }
 
       connection.query(data.sql, [data.values], function(err){
-          connection.release();
+          connection.destroy();
           if(err) {
               callback(err, null);
           }

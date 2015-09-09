@@ -7,20 +7,28 @@ $(document).ready(function(){
       var cookieExist = getCookie();
       if (cookieExist) {
           cookie = cookieExist;
-          console.log('Cookie Exist :' + cookie);
       } else {
           setCookie(cookie_id);
           cookie = cookie_id;
-          console.log('Create new cookie');
       }
   });
 
-  // event firing :
-    // on click of likes
-    // animate up after like
-    // add +1 to number of likes
-  // used html data- data.()
-  // cookie handlings
+  // add the scroll animation
+  $(window).scroll(function() {
+    if ($(window).scrollTop() > 2000) {
+        $('#scrollTop').removeClass('hidden');
+    } else {
+        $('#scrollTop').addClass('hidden');
+    }
+ });
+
+ $('#scrollTop').on('click', function(){
+     $('html,body').animate({ scrollTop: 0 }, 'slow');
+     $('#scrollTop').addClass('hidden');
+     return false;
+ });
+
+  // Start of the functions
   socket.on('LoadFeed', function (data) {
           if (!data) {
               console.log('Data is not set correctly');
@@ -53,42 +61,44 @@ $(document).ready(function(){
   $(document).on('click', '#btn_like', function() {
       var $row = $(this).closest('.data-row'),
             id = $row.attr('id'),
-     num_likes = $row.find('#num_likes').text();
+     num_likes = $row.find('#num_likes').text(),
+          $btn = $(this);
 
-    console.log('like ' + id);
+
      // check cookies if true then add the like
-     if (checkCookieLikes(id)) {
-        return;
-     }
+     checkCookieLikes(id, function(err, result){
+          if (result.continue) {
+              // add the likes
+              num_likes = Number(num_likes) + 1;
+              $row.find('#num_likes').text(num_likes);
+              $row.find('#num_likes').attr('data-likes', num_likes);
 
-     // add the likes
-     num_likes = Number(num_likes) + 1;
-     $row.find('#num_likes').text(num_likes);
-     $row.find('#num_likes').attr('data-likes', num_likes);
+              // animate up
+              var prevDiv = $row.prev(),
+                prevLikes = prevDiv.find('#num_likes').attr('data-likes'),
+                 distance = $row.outerHeight();
 
-     // animate up
-     var prevDiv = $row.prev(),
-       prevLikes = prevDiv.find('#num_likes').attr('data-likes'),
-        distance = $row.outerHeight();
+              if (num_likes > Number(prevLikes) ) {
+                  if (prevDiv.length) {
+                      $.when($row.animate({
+                          top: -distance
+                      }, "fast"),
+                      prevDiv.animate({
+                          top: distance
+                      }, "fast")).done(function () {
+                          prevDiv.css('top', '0px');
+                          $row.css('top', '0px');
+                          $row.insertBefore(prevDiv);
+                      });
+                  }
+              }
+              // ajax and saved
+              $btn.removeClass('btn-success');
+              $btn.addClass('btn-info');
+              $btn.attr('disabled', 'disabled');
+          }
+     });
 
-     if (num_likes > Number(prevLikes) ) {
-         if (prevDiv.length) {
-             $.when($row.animate({
-                 top: -distance
-             }, "fast"),
-             prevDiv.animate({
-                 top: distance
-             }, "fast")).done(function () {
-                 prevDiv.css('top', '0px');
-                 $row.css('top', '0px');
-                 $row.insertBefore(prevDiv);
-             });
-         }
-     }
-     // ajax and saved
-     $(this).removeClass('btn-success');
-     $(this).addClass('btn-info');
-     $(this).attr('disabled', 'disabled');
   });
 
   // load more
@@ -98,7 +108,6 @@ $(document).ready(function(){
         $btnLoadMore.find('#btnLoadMoreLabel').text('Loading more data...');
 
         var lastID = $('#articles').children().last().attr('id');
-        console.log('last id: ' + lastID);
         socket.emit('loadMore', {id: Number(lastID)});
 
         setTimeout(function(){
@@ -107,28 +116,11 @@ $(document).ready(function(){
         }, 350);
   });
 
-  // add the scroll animation
-  $(window).scroll(function() {
-    if ($(window).scrollTop() > 2000) {
-        $('#scrollTop').removeClass('hidden');
-    } else {
-        $('#scrollTop').addClass('hidden');
-    }
- });
-
- $('#scrollTop').on('click', function(){
-     $('html,body').animate({ scrollTop: 0 }, 'slow');
-     $('#scrollTop').addClass('hidden');
-     return false;
- });
-
  function setCookie(cookie_id){
     var d = new Date();
     d.setTime(d.getTime() + (250*24*60*60*1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = "rssfeedmaster=" + cookie_id + "; " + expires;
-    document.cookie = "nsandklaskd=" + cookie_id + "; " + expires;
-    document.cookie = "nsandklas2kd=" + cookie_id + "; " + expires;
  }
 
  function getCookie() {
@@ -143,20 +135,20 @@ $(document).ready(function(){
      return false;
  }
 
- function checkCookieLikes(article_id)
+ function checkCookieLikes(article_id, callback)
  {
-      socket.emit('checkCookieLikes', {article_id: article_id, cookie_id: cookie});
-      socket.on('checkCookieResult', function(result){
-          console.log('cookie result: ' + result);
-          if (result.like == false) {
-              // its already liked
-              console.log('ADD NEW LIKED');
-              socket.emit('addCookieLikes', {article_id: article_id, cookie_id: cookie});
-              return false;
-          }
-          console.log('ALREADY LIKED ');
-          return false;
-      });
+      var data = JSON.stringify({article_id: article_id, cookie_id: cookie});
+      ajax('/checkLikes', 'POST', data)
+        .done(function(result){
+            if (result.have_like == false) {
+                callback(null, {continue: true});
+            } else {
+                callback(null, {continue: false});
+            }
+        })
+        .fail(function(){
+            console.log('Failed to check cookie likes');
+        });
  }
 
  function cookieDisable(){
@@ -164,3 +156,26 @@ $(document).ready(function(){
  }
 
 });
+
+function errorHandle(xhr, status, error) {
+  "use strict";
+  console.log(xhr);
+  console.log(status);
+  console.log(error);
+}
+
+function ajax(url, type, input) {
+  "use strict";
+
+  return $.ajax({
+    type: type,
+    url: url,
+    data: input,
+    dataType: 'json',
+    contentType: 'application/json',
+    cache: false,
+    error: function (xhr, status, error) {
+      errorHandle(xhr, status, error);
+    }
+    });
+}

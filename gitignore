@@ -1,9 +1,0 @@
-## Node Modules ##
-##################
-/node_modules
-
-# Reference Links, Project Description
-/project_info
-
-# Logs
-*.log
