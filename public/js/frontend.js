@@ -32,17 +32,44 @@ $(document).ready(function(){
 
   // Start of the functions
   socket.on('LoadFeed', function (data) {
+      if (!data) {
+          console.log('Data is not set correctly');
+          return;
+      }
+      qty += data.length;
+      $('.result-container').removeClass('hidden');
+      $('.result-container').find('#numResults').text(qty + ' Results Found');
+
+      data.forEach(function(article){
+
+          var dataArticle = '<div class="data-row" id="'+ article.title +'">' +
+              '<div class="row">' +
+                  '<div class="col-xs-1">' +
+                    '<button class="btn btn-sm btn-success" id="btn_like"><span class="fa fa-thumbs-up"></span></button>' +
+                    '<span class="label label-info" id="num_likes" data-likes="'+ article.likes +'">'+ article.likes +'</span>' +
+                  '</div>' +
+                  '<div class="col-xs-9 content-data">' +
+                      '<span><a href="' + unescape(article.link) + '" class="link" target="_blank">'+ unescape(article.link) +'</a></span>' +
+                      '<h4>'+ unescape(article.title) +'</h4>' +
+                  '</div>' +
+              '</div>' +
+              '<hr>' +
+          '</div>';
+          $(dataArticle).hide().appendTo('#articles').show('normal');
+      });
+      getUserLikes();
+	});
+
+  socket.on('LoadNewestFeed', function (data) {
           if (!data) {
               console.log('Data is not set correctly');
               return;
           }
-          qty += data.length;
-          $('.result-container').removeClass('hidden');
+          qty += 1;
           $('.result-container').find('#numResults').text(qty + ' Results Found');
 
           data.forEach(function(article){
-
-              var dataArticle = '<div class="data-row" id="'+ article.id +'">' +
+              var dataArticle = '<div class="data-row" id="'+ article.title +'">' +
                   '<div class="row">' +
                       '<div class="col-xs-1">' +
                         '<button class="btn btn-sm btn-success" id="btn_like"><span class="fa fa-thumbs-up"></span></button>' +
@@ -55,22 +82,19 @@ $(document).ready(function(){
                   '</div>' +
                   '<hr>' +
               '</div>';
-              $(dataArticle).hide().appendTo('#articles').show('normal');
+              $(dataArticle).hide().prependTo('#articles').show('normal');
           });
-          //$(dataArticle).hide().prependTo('#articles').show('normal');
-      // get the userLikes
-      getUserLikes(cookie);
 	});
 
   $(document).on('click', '#btn_like', function() {
       var $row = $(this).closest('.data-row'),
-            id = $row.attr('id'),
-     num_likes = $row.find('#num_likes').text(),
+            title = $row.attr('id'),
+     num_likes = Number($row.find('#num_likes').text()),
           $btn = $(this);
 
 
      // check cookies if true then add the like
-     checkCookieLikes(id, function(err, result){
+     checkCookieLikes(title, function(err, result){
           if (result.continue) {
               // add the likes
               num_likes = Number(num_likes) + 1;
@@ -100,6 +124,7 @@ $(document).ready(function(){
               $btn.removeClass('btn-success');
               $btn.addClass('btn-info');
               $btn.attr('disabled', 'disabled');
+
           }
      });
 
@@ -139,14 +164,19 @@ $(document).ready(function(){
      return false;
  }
 
- function checkCookieLikes(article_id, callback)
+ function checkCookieLikes(title, callback)
  {
-      var data = JSON.stringify({article_id: article_id, cookie_id: cookie});
+      var data = JSON.stringify({title: title, cookie_id: cookie});
       ajax('/checkLikes', 'POST', data)
         .done(function(result){
             if (result.have_like == false) {
-                callback(null, {continue: true});
+                if (result.err) {
+                  console.log(result.err);
+                } else {
+                  callback(null, {continue: true});
+                }
             } else {
+                console.log('Already like that article');
                 callback(null, {continue: false});
             }
         })
@@ -159,8 +189,9 @@ function getUserLikes(cookie){
   var data = JSON.stringify({cookie_id: cookie});
   ajax('/getUserLikes', 'POST', data)
     .done(function(result){
+      console.log(result);
         result.forEach(function(row){
-            var $btn = $('#articles').find('#'+row.article_id).find('#btn_like');
+            var $btn = $('#articles').find('#'+row.title).find('#btn_like');
                 $btn.removeClass('btn-success');
                 $btn.addClass('btn-info');
                 $btn.attr('disabled', 'disabled');

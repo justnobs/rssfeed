@@ -1,0 +1,5 @@
+1. Open CMD ( Run as admin )
+2. C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\data
+3. Open New CMD and run
+   C:\mongodb\bin\mongod.exe --journal
+   or C:\mongodb\bin\mongo.exe
