@@ -32,7 +32,10 @@
     <content>
       <div class="container">
         <!-- <div class="search-feed col-md-offset-2 col-md-4">
-            <input type="text" name="searchfeed" class="form-control" placeholder="Search rss feed">
+            <div class="input-group">
+               <div class="input-group-addon"><span class="fa fa-search" id="searchIcon"></span></div>
+               <input type="text" name="searchfeed" id="searchfeed" class="form-control" placeholder="Search rss feed">
+            </div>
         </div> -->
         <div class="result-container col-md-offset-2 col-md-8 hidden">
             <div class="alert alert-info">
@@ -68,7 +71,7 @@
           var emit_data = {};
           var socket = io.connect(url);
           var qty = 0;
-          
+
           // Emit 'init' event
       		emit_data = {
       			init: true

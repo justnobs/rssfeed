@@ -6,7 +6,7 @@ var db = require('./rss-mongodb'),
     cookie, offset;
 
 var LoadRssdata = function(){
-    console.log('Trying to fetch newest feed every Minute');
+    console.log('Trying to fetch newest feed every 2 Minutes');
     for (var i = 0; i < helper.sources.length; i++) {
         helper.getRss(helper.sources[i], function(err, articles){
               // check if already existed
@@ -69,8 +69,8 @@ module.exports = function(app) {
         offset += 5;
 		});
 
-    // Call every minute
-    setInterval(LoadRssdata, 60000);
+    // Call every 2 minutes
+    setInterval(LoadRssdata, 120000);
 	});
 
 	return io;

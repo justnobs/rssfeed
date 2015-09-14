@@ -41,7 +41,7 @@ $(document).ready(function(){
       $('.result-container').find('#numResults').text(qty + ' Results Found');
 
       data.forEach(function(article){
-          var dataArticle = '<div class="data-row" id="'+ article._id +'">' +
+          var dataArticle = '<div class="data-row" id="'+ article._id +'" data-title="'+ article.title.toLowerCase() +'">' +
               '<div class="row">' +
                   '<div class="col-xs-1">' +
                     '<button class="btn btn-sm btn-success" id="btn_like"><span class="fa fa-thumbs-up"></span></button>' +
@@ -68,7 +68,7 @@ $(document).ready(function(){
           $('.result-container').find('#numResults').text(qty + ' Results Found');
 
           data.forEach(function(article){
-              var dataArticle = '<div class="data-row" id="'+ article._id +'>' +
+              var dataArticle = '<div class="data-row" id="'+ article._id +' data-title="'+ article.title.toLowerCase() +'>' +
                   '<div class="row">' +
                       '<div class="col-xs-1">' +
                         '<button class="btn btn-sm btn-success" id="btn_like"><span class="fa fa-thumbs-up"></span></button>' +
@@ -85,6 +85,7 @@ $(document).ready(function(){
           });
 	});
 
+  // START JQUERY ACTIONS
   $(document).on('click', '#btn_like', function() {
       var $row = $(this).closest('.data-row'),
     article_id = $row.attr('id'),
@@ -144,6 +145,8 @@ $(document).ready(function(){
         }, 350);
   });
 
+
+// START COOKIES
  function setCookie(cookie_id){
     var d = new Date();
     d.setTime(d.getTime() + (250*24*60*60*1000));
@@ -163,6 +166,7 @@ $(document).ready(function(){
      return false;
  }
 
+// START AJAX REQUEST
  function checkCookieLikes(article_id, callback)
  {
       var data = JSON.stringify({article_id: article_id, cookie_id: cookie});
@@ -206,6 +210,8 @@ function getUserLikes(){
 
 });
 
+
+// GLOBAL FUNCTIONS
 function errorHandle(xhr, status, error) {
   "use strict";
   console.log(xhr);
