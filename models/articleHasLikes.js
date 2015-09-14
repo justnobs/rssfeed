@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 // create a schema
 var ArticlesHasLikes = new Schema({
-  title: { type: String, required: true},
+  article_id: { type: String, required: true},
   cookie_id: { type: String, required: true }
 });
 

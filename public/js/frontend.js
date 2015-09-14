@@ -41,8 +41,7 @@ $(document).ready(function(){
       $('.result-container').find('#numResults').text(qty + ' Results Found');
 
       data.forEach(function(article){
-
-          var dataArticle = '<div class="data-row" id="'+ article.title +'">' +
+          var dataArticle = '<div class="data-row" id="'+ article._id +'">' +
               '<div class="row">' +
                   '<div class="col-xs-1">' +
                     '<button class="btn btn-sm btn-success" id="btn_like"><span class="fa fa-thumbs-up"></span></button>' +
@@ -69,7 +68,7 @@ $(document).ready(function(){
           $('.result-container').find('#numResults').text(qty + ' Results Found');
 
           data.forEach(function(article){
-              var dataArticle = '<div class="data-row" id="'+ article.title +'">' +
+              var dataArticle = '<div class="data-row" id="'+ article._id +'>' +
                   '<div class="row">' +
                       '<div class="col-xs-1">' +
                         '<button class="btn btn-sm btn-success" id="btn_like"><span class="fa fa-thumbs-up"></span></button>' +
@@ -88,13 +87,13 @@ $(document).ready(function(){
 
   $(document).on('click', '#btn_like', function() {
       var $row = $(this).closest('.data-row'),
-            title = $row.attr('id'),
+    article_id = $row.attr('id'),
      num_likes = Number($row.find('#num_likes').text()),
           $btn = $(this);
 
 
      // check cookies if true then add the like
-     checkCookieLikes(title, function(err, result){
+     checkCookieLikes(article_id, function(err, result){
           if (result.continue) {
               // add the likes
               num_likes = Number(num_likes) + 1;
@@ -164,17 +163,13 @@ $(document).ready(function(){
      return false;
  }
 
- function checkCookieLikes(title, callback)
+ function checkCookieLikes(article_id, callback)
  {
-      var data = JSON.stringify({title: title, cookie_id: cookie});
+      var data = JSON.stringify({article_id: article_id, cookie_id: cookie});
       ajax('/checkLikes', 'POST', data)
         .done(function(result){
             if (result.have_like == false) {
-                if (result.err) {
-                  console.log(result.err);
-                } else {
-                  callback(null, {continue: true});
-                }
+                callback(null, {continue: true});
             } else {
                 console.log('Already like that article');
                 callback(null, {continue: false});
@@ -185,13 +180,19 @@ $(document).ready(function(){
         });
  }
 
-function getUserLikes(cookie){
+function getUserLikes(){
   var data = JSON.stringify({cookie_id: cookie});
   ajax('/getUserLikes', 'POST', data)
     .done(function(result){
-      console.log(result);
-        result.forEach(function(row){
-            var $btn = $('#articles').find('#'+row.title).find('#btn_like');
+        if (result.error) {
+            console.log('Error on fetching user likes');
+            return;
+        }
+
+        result.data.forEach(function(row){
+            var $row = $('#articles').find('#'+row.article_id),
+                $btn = $row.find('#btn_like');
+
                 $btn.removeClass('btn-success');
                 $btn.addClass('btn-info');
                 $btn.attr('disabled', 'disabled');
